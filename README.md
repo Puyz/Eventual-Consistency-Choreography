@@ -18,20 +18,20 @@ Genellikle bu iletişimin message broker ile gerçekleştirilmesi tercih edilir.
 
 Taktiksel olarak Choreography’u incelersek eğer, ilk serviste başlayan transaction işlevini bitirdikten sonra sonraki servise haber gönderebilmek için message broker üzerinden bir event fırlatacaktır. Ardından bu servisteki transaction işlevini bitirdikten sonra kendisinden sonraki servisi tetikleyebilmek için yine bir event fırlatacaktır. Ve bu süreç client’ın istediği işlem bitene kadar silsile halinde işlevdeki son servise kadar devam edecektir. Buradan anlayacağımız her bir servisin kendisinden sonraki servisin tetiklenip tetiklenmeyeceğine dair kararı verdiğini görmekteyiz. Her bir servis yapılan işlev neticesinde kendi sürecine bağlı bir şekilde başarılı ya da başarısız bir karar vermekte ve bu neticeye göre ya kendisinden sonraki servisteki transaction’ın başlamasını sağlayabilmekte ya da tüm transaction’ları geri alabilmektedir. Yani her bir servis bizzat karar verici konumundadır.
 
-- ***Choreography implemantasyonu, distributed transaction’a katılacak olan microservice sayısının 2 ile 4 arasında olduğu durumlarda tercih edilir. 4’ten fazla servis durumunda yazımızın devamında inceleyeceğimiz Orchestration implemantasyonunu uygulamak daha uygundur..***
+- ***Choreography implemantasyonu, distributed transaction’a katılacak olan microservice sayısının  ile 4 arasında olduğu durumlarda tercih edilir. 4’ten fazla servis durumunda Orchestration implemantasyonunu uygulamak daha uygundur..***
 
 
 Choreography’de her bir servis kuyruğu dinler. Dinlediği event message türüne göre gelen bir message söz konusuysa gerekli işlemlerini gerçekleştirir ve sonuç olarak muhakkak durumu bildiren başarılı yahut başarısız bilgisini kuyruğa event olarak ekler. Ardından diğer servisler bu event’e göre ya işlevlerine devam edecektirler ya da tüm transaction’lar geri alınıp veri tutarlılığını sağlayacaktırlar.
 
 Örnek olarak aşağıdaki görseli incelersek eğer bir e-ticaret uygulamasında Choreography implemantasyonuyla oluşturulan siparişi görmekteyiz.
 
-![image](https://github.com/user-attachments/assets/db7bee71-fa44-4c22-9177-c5cf30f1e5d4)
+![image](https://github.com/user-attachments/assets/db7bee71-fa44-4c-9177-c5cf30f1e5d4)
 
 Bu uygulamada bir siparişi oluşturabilmek için;
 
 1. **Order** serviste alınan POST isteği neticesinde sipariş oluşturulur.
 
-2. Order events channel kuyruğuna ‘OrderCreated’ misali bir event gönderilir.
+. Order events channel kuyruğuna ‘OrderCreated’ misali bir event gönderilir.
 
 3. **Customer** servisi ise Order events channel‘da ki ‘OrderCreated’ event’ına subscribe olmaktadır. Haliyle ilgili kuyruğa beklenen türde bir event gelirse Customer servis tetiklenecektir.
 
@@ -48,9 +48,9 @@ Ayrıca Choreography yöntemi, sorumlulukları Saga katılımcı servisleri aras
 #### 1. Adım
 Kullanıcıdan gelen yeni sipariş isteği neticesinde **Order Service** bu siparişi durum bilgisi **Suspend** olacak şekilde kaydeder. Ardından ödeme işlemlerinin gerçekleştirilebilmesi için ***ORDER_CREATED_EVENT*** isimli event’i fırlatır.
 
-![image](https://github.com/user-attachments/assets/ea544718-2d6c-49be-b347-e16f13fb5c66)
+![image](https://github.com/user-attachments/assets/ea544718-d6c-49be-b347-e16f13fb5c66)
 
-#### 2. Adım
+#### . Adım
 ***ORDER_CREATED_EVENT***‘ine subscribe olan **Payment Service** gerekli ödeme işlemlerini gerçekleştirir ve artık alınan ürünlerin stok bilgilerini güncellemek için ***BILLED_ORDER_EVENT*** isimli event’i fırlatır.
 
 #### 3. Adım
@@ -61,7 +61,7 @@ Kullanıcıdan gelen yeni sipariş isteği neticesinde **Order Service** bu sipa
 
 Yukarıdaki adımlardan herhangi bir durumda hata meydana geldiği taktirde tüm işlemlerin geri alınması gerekmektedir. İşte bu durumda aşağıdaki senaryo devreye girecektir;
 
-![image](https://github.com/user-attachments/assets/3933beef-9b92-4d5f-8a0b-5b2f07d16eb5)
+![image](https://github.com/user-attachments/assets/3933beef-9b9-4d5f-8a0b-5bf07d16eb5)
 
 Distributed transaction süreçlerinde bir işlemi geri almak demek esasında o işlemi telafi etmek ya da tam tersini uygulamak için başka bir işlem yapılması demektir(Compensable Transaction) Dolayısıyla yandaki görselden yola çıkarak üstteki işlem akışının yetersiz stok miktarından dolayı **Stock Service**‘de başarısızlığa uğradığını varsayarak sürecin nasıl işlediğini simüle edelim…
 
