@@ -25,7 +25,7 @@ Choreography’de her bir servis kuyruğu dinler. Dinlediği event message tür�
 
 Örnek olarak aşağıdaki görseli incelersek eğer bir e-ticaret uygulamasında Choreography implemantasyonuyla oluşturulan siparişi görmekteyiz.
 
-![image](https://github.com/user-attachments/assets/db7bee71-fa44-4c-9177-c5cf30f1e5d4)
+![image](https://github.com/user-attachments/assets/db7bee71-fa44-4c22-9177-c5cf30f1e5d4)
 
 Bu uygulamada bir siparişi oluşturabilmek için;
 
@@ -48,7 +48,7 @@ Ayrıca Choreography yöntemi, sorumlulukları Saga katılımcı servisleri aras
 #### 1. Adım
 Kullanıcıdan gelen yeni sipariş isteği neticesinde **Order Service** bu siparişi durum bilgisi **Suspend** olacak şekilde kaydeder. Ardından ödeme işlemlerinin gerçekleştirilebilmesi için ***ORDER_CREATED_EVENT*** isimli event’i fırlatır.
 
-![image](https://github.com/user-attachments/assets/ea544718-d6c-49be-b347-e16f13fb5c66)
+![image](https://github.com/user-attachments/assets/ea544718-2d6c-49be-b347-e16f13fb5c66)
 
 #### . Adım
 ***ORDER_CREATED_EVENT***‘ine subscribe olan **Payment Service** gerekli ödeme işlemlerini gerçekleştirir ve artık alınan ürünlerin stok bilgilerini güncellemek için ***BILLED_ORDER_EVENT*** isimli event’i fırlatır.
@@ -61,7 +61,7 @@ Kullanıcıdan gelen yeni sipariş isteği neticesinde **Order Service** bu sipa
 
 Yukarıdaki adımlardan herhangi bir durumda hata meydana geldiği taktirde tüm işlemlerin geri alınması gerekmektedir. İşte bu durumda aşağıdaki senaryo devreye girecektir;
 
-![image](https://github.com/user-attachments/assets/3933beef-9b9-4d5f-8a0b-5bf07d16eb5)
+![image](https://github.com/user-attachments/assets/3933beef-9b92-4d5f-8a0b-5b2f07d16eb5)
 
 Distributed transaction süreçlerinde bir işlemi geri almak demek esasında o işlemi telafi etmek ya da tam tersini uygulamak için başka bir işlem yapılması demektir(Compensable Transaction) Dolayısıyla yandaki görselden yola çıkarak üstteki işlem akışının yetersiz stok miktarından dolayı **Stock Service**‘de başarısızlığa uğradığını varsayarak sürecin nasıl işlediğini simüle edelim…
 
